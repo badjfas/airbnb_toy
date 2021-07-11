@@ -3,19 +3,19 @@ const ESLintPlugin = require("eslint-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const webpack = require("webpack");
 
 const path = require("path");
 const port = process.env.PORT || 3030;
 
 const paths = path.resolve(__dirname + "/dist");
-
 module.exports = {
   // entry: {
   //   // For Typescript
   //   "js/app": ["./src/App.tsx"],
   // },
   entry: "./src/index.tsx",
-  mode: "development",
+  mode: process.env.NODE_ENV === "productuon" ? "production" : "development",
 
   optimization: {
     minimizer: [new CssMinimizerPlugin({})],
@@ -77,6 +77,9 @@ module.exports = {
     ],
   },
   plugins: [
+    new webpack.EnvironmentPlugin({
+      "process.env.NODE_ENV": JSON.stringify("development"),
+    }),
     new ForkTsCheckerWebpackPlugin({}),
     new MiniCssExtractPlugin({
       linkType: true,
@@ -104,6 +107,7 @@ module.exports = {
     extensions: [".tsx", ".ts", ".js"],
     modules: [path.join(__dirname, "src"), "node_modules"],
   },
+  devtool: "inline-source-map",
   devServer: {
     host: "localhost",
     port: port,

@@ -5,6 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "rm -rf dist && webpack && webpack serve",
+    "start:prod": "rm -rf dist && NODE_ENV=production webpack && webpack serve",
     "build": "webpack"
   },
   "author": "",
