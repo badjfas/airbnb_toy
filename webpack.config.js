@@ -1,29 +1,42 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ESLintPlugin = require("eslint-webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 const path = require("path");
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 3030;
 
 const paths = path.resolve(__dirname + "/dist");
 
-console.log(paths);
 module.exports = {
+  // entry: {
+  //   // For Typescript
+  //   "js/app": ["./src/App.tsx"],
+  // },
+  entry: "./src/App.tsx",
   mode: "development",
-  entry: "./src/index.js",
+
   optimization: {
-    usedExports: true,
+    minimizer: [new CssMinimizerPlugin({})],
   },
   output: {
-    filename: "bundle.[hash].js",
+    filename: "bundle.[fullhash].js",
   },
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(ts|tsx)$/,
+        use: [
+          "babel-loader",
+          {
+            loader: "ts-loader",
+            options: {
+              transpileOnly: true,
+            },
+          },
+        ],
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-        },
       },
       {
         test: /\.html$/,
@@ -37,8 +50,8 @@ module.exports = {
         ],
       },
       {
-        test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
+        test: /.s?css$/,
+        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
       },
       {
         test: /\.(png|jpe?g|gif)$/i,
@@ -64,6 +77,14 @@ module.exports = {
     ],
   },
   plugins: [
+    new ForkTsCheckerWebpackPlugin({}),
+    new MiniCssExtractPlugin({
+      linkType: true,
+      filename: (_, __, ___) => {
+        return "[name].css";
+      },
+      chunkFilename: "[id].[contenthash].css",
+    }),
     new HtmlWebpackPlugin({
       template: "public/index.html",
     }),
@@ -80,14 +101,15 @@ module.exports = {
     }),
   ],
   resolve: {
-    extensions: ["*", ".js", ".jsx"],
+    extensions: [".tsx", ".ts", ".js"],
     modules: [path.join(__dirname, "src"), "node_modules"],
   },
   devServer: {
     host: "localhost",
     port: port,
-    open: true,
+    open: false,
     liveReload: true,
     hot: true,
+    inline: false,
   },
 };
