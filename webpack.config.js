@@ -14,7 +14,7 @@ module.exports = {
   //   // For Typescript
   //   "js/app": ["./src/App.tsx"],
   // },
-  entry: "./src/App.tsx",
+  entry: "./src/index.tsx",
   mode: "development",
 
   optimization: {
@@ -111,5 +111,6 @@ module.exports = {
     liveReload: true,
     hot: true,
     inline: false,
+    historyApiFallback: true,
   },
 };
