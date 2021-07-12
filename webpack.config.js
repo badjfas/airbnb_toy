@@ -10,11 +10,7 @@ const port = process.env.PORT || 3030;
 
 const paths = path.resolve(__dirname + "/dist");
 module.exports = {
-  // entry: {
-  //   // For Typescript
-  //   "js/app": ["./src/App.tsx"],
-  // },
-  entry: "./src/index.tsx",
+  entry: ["react-hot-loader/patch", "./src/index.tsx"],
   mode: process.env.NODE_ENV === "productuon" ? "production" : "development",
 
   optimization: {
@@ -77,6 +73,7 @@ module.exports = {
     ],
   },
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
     new webpack.EnvironmentPlugin({
       "process.env.NODE_ENV": JSON.stringify("development"),
     }),
@@ -93,7 +90,7 @@ module.exports = {
     }),
     new ESLintPlugin({
       // Plugin options
-      extensions: ["js", "mjs", "jsx", "ts", "tsx"],
+      extensions: ["ts", "tsx"],
       formatter: require.resolve("react-dev-utils/eslintFormatter"),
       eslintPath: require.resolve("eslint"),
       // ESLint class options
@@ -111,10 +108,10 @@ module.exports = {
   devServer: {
     host: "localhost",
     port: port,
-    open: false,
+    open: true,
     liveReload: true,
     hot: true,
-    inline: false,
     historyApiFallback: true,
+    inline: true,
   },
 };
