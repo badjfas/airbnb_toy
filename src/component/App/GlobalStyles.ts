@@ -6,5 +6,7 @@ export default createGlobalStyle`
     padding:0
   }
 
-  
+  .body2{
+    font-size: 48px;
+  }
 `;
