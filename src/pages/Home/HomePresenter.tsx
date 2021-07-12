@@ -1,9 +1,10 @@
 import React from "react";
 import Image from "../../component/Header/CAPA.png";
+import { Container } from "./styles";
 export default () => {
   return (
-    <div>
+    <Container>
       <img src={Image} />
-    </div>
+    </Container>
   );
 };
